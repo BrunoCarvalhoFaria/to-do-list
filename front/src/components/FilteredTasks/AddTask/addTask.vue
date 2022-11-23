@@ -40,7 +40,6 @@ export default {
     modal: false,
     menu2: false,
     taskDefault: {
-      id: 0,       
       name: '',
       description: '',
       date: '',

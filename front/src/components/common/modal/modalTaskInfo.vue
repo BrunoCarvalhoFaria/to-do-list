@@ -81,8 +81,7 @@
 
 export default{ 
   data: () => ({ 
-    taskTemp: {
-      id: 0,       
+    taskTemp: {          
       name: '',
       description: '',
       date: '',

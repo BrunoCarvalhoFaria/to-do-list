@@ -39,23 +39,23 @@ import TaskUnit from "./Task/taskUnit.vue";
 import AddTask from './AddTask/addTask.vue';
 import {mapState, mapMutations} from 'vuex'
 import ModalTaskInfo from '../common/modal/modalTaskInfo.vue'
-import api from "../../services/api"
+// import api from "../../services/api"
 
-const requestTaskList = async () => {
-  await api.get("").then((res) =>{
-    console.log("resposta: ", res)
-    return res
-  }).catch ((err)  => {
-    console.log('ERRO NA REQUISIÇÃO')
-    console.log(err)
-  })
-}
+// const requestTaskList = async () => {
+//   await api.get("").then((res) =>{
+//     console.log("resposta: ", res)
+//     return res
+//   }).catch ((err)  => {
+//     console.log('ERRO NA REQUISIÇÃO')
+//     console.log(err)
+//   })
+// }
 
 export default { 
 
   beforeMount(){
     console.log("RODOU O MOUNTED")
-    requestTaskList();
+    //requestTaskList();
   },
 
   components: {

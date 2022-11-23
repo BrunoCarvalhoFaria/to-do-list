@@ -1,16 +1,16 @@
 const mongoose = require("mongoose");
 
 const taskSchema = new mongoose.Schema({
-  task: {
+  name: {
     type: String,
     require: true
   },
-  check: {
+  done: {
     type: Boolean,
     require: true
   },
   date: {
-    type: Date,
+    type: String,
     require:true
   },
   description: {

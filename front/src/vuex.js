@@ -9,14 +9,12 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     newTask: {
-      id: 0,
       name: '',
       date: '',
       description: '',
       done: false
     },
     taskDefault: {
-      id: 0,
       name: '',
       date: '',
       description: '',
@@ -37,20 +35,35 @@ const store = new Vuex.Store({
       },
     
     addNewTask: async (state) => {
-      (state.taskList.length === 0) ? state.newTask.id = 0 : state.newTask.id =  state.taskList[state.taskList.length - 1].id + 1;
-      try {
-        console.log('dado a ser salvo', state.newTask)
-        console.log('lista de dados', state.taskList)
-        console.log('dado default', state.newTask)
-        console.log('lista de dados apos salvar', state.taskList)
+      //(state.taskList.length === 0) ? state.newTask.id = 0 : state.newTask.id =  state.taskList[state.taskList.length - 1].id + 1;
+      // try {
+        // console.log('dado a ser salvo', state.newTask)
+        // console.log('lista de dados', state.taskList)
+        // console.log('dado default', state.newTask)
+        // console.log('lista de dados apos salvar', state.taskList)
 
-        //state.taskList.push(state.newTask);
-        await api.post("/create", state.newTask)
-        state.newTask = state.taskDefault;
+        //tate.taskList.push(JSON.parse(JSON.stringify(state.newTask)));
+        //console.log(JSON.parse(JSON.stringify(state.newTask)))
+        const dado = {
+          task: {
+            name: "Bruno",
+            date: "06/07/1987",
+            description: "testando o post",
+            done: true
+          }}
+        await api.post("/create", dado).then((res) => {
+          console.log(JSON.parse(JSON.stringify(state.newTask)))
+          console.log(res)
+          state.newTask = state.taskDefault;
+        }).catch((err) => {
+          console.log(err)
+        })          
+        // }
         
-      } catch {
-        console.log('ERRO AO ADICIONAR TAREFA')
-      }      
+        
+      // } catch {
+        // console.log('ERRO AO ADICIONAR TAREFA')
+      // }      
     },
 
     newTaskMount: (state, taskTemp) => {
