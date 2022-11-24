@@ -1,24 +1,28 @@
 <template>
-  <div>
+  <div>  
     <v-btn 
         class="ma-2 white--text"                
-        color="blue darken-4"
+        color="primary"
+        elevation="2"          
         @click="() => {                  
-                  addTask = true}"              
+                  addTask = true                  
+                  this.$parent.$options.data.taskTemp = this.$store.state.taskDefault;
+                  }"              
       >
         Adicionar nova tarefa
-    </v-btn>
-    <v-dialog
-      v-model="addTask"
-      
-    >
-      <v-card class="pa-10" outlined shaped>
-        <ModalTaskInfo              
-              label='Adicionar tarefa:'
-              @save="save()"
-              @changeAddTask="changeAddTask()"/>
-      </v-card>
-    </v-dialog>        
+    </v-btn> 
+    <br>      
+    <br>       
+      <v-dialog 
+        v-model="addTask"      
+      >    
+        <v-card class="pa-10" outlined shaped> 
+          <ModalTaskInfo             
+                label='Adicionar tarefa:'
+                @save="save()"
+                @modalVisible="changeAddTask()"/>
+        </v-card>
+      </v-dialog>        
   </div>
 </template>
 
@@ -29,7 +33,9 @@ import ModalTaskInfo from '../../common/modal/modalTaskInfo.vue'
 
 
 export default {  
-  
+
+    
+
   components: {
     ModalTaskInfo
   },  
@@ -38,13 +44,7 @@ export default {
     addTask: false,    
     menu: false,
     modal: false,
-    menu2: false,
-    taskDefault: {
-      name: '',
-      description: '',
-      date: '',
-      done: false
-    }
+    menu2: false
   }),
 
   methods: {

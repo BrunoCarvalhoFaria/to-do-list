@@ -1,35 +1,35 @@
 <template>
-  <div>
-    <hr>    
+  <div> 
+    <v-divider></v-divider>  
     <AddTask/>    
-    
     <v-row>
       <v-col       
         cols="12"
         sm="6"
-        md="3"      
+        md="4"
+        lg="3"
+        xl="2"
+
+        max-width='100'              
         v-for="(task, index) in taskList" 
         :key="index">
         <TaskUnit 
-              :name = "taskList[index].name"
-              :date = "taskList[index].date"
-              :description = "taskList[index].description"
-              :done = "taskList[index].done"
-              @changeStatus = "changeTaskStatus(index)"
-              @deleteTask = "deleteTask(index)"
+              :task = "taskList[index]"              
+              @changeStatus = "changeTaskStatus(taskList[index]._id, index)"
+              @deleteTask = "deleteTask(taskList[index]._id)"
               @editTask = "defineEditTask(index)"
-              />
-        <v-dialog
+              />         
+      </v-col>
+      <v-dialog
           v-model="editTaskModalVisible"      
         >
           <v-card class="pa-10" outlined shaped>
             <ModalTaskInfo              
               label='Editar tarefa:'
               @save="editTaskCall(editIndex)"
-              @changeAddTask="changeeditTaskModalVisible()"/>
+              @modalVisible="changeEditTaskModalVisible()"/>
           </v-card>
-        </v-dialog>  
-      </v-col>
+        </v-dialog> 
     </v-row>     
   </div>
 </template>
@@ -39,23 +39,13 @@ import TaskUnit from "./Task/taskUnit.vue";
 import AddTask from './AddTask/addTask.vue';
 import {mapState, mapMutations} from 'vuex'
 import ModalTaskInfo from '../common/modal/modalTaskInfo.vue'
-// import api from "../../services/api"
 
-// const requestTaskList = async () => {
-//   await api.get("").then((res) =>{
-//     console.log("resposta: ", res)
-//     return res
-//   }).catch ((err)  => {
-//     console.log('ERRO NA REQUISIÇÃO')
-//     console.log(err)
-//   })
-// }
 
 export default { 
 
-  beforeMount(){
-    console.log("RODOU O MOUNTED")
-    //requestTaskList();
+  beforeMount(){    
+    this.loadTaskList()
+    
   },
 
   components: {
@@ -80,20 +70,23 @@ export default {
     ...mapMutations([
       'changeTaskStatus',
       'deleteTask',
-      'editTask'
+      'editTask',
+      'loadTaskList'
     ]),
     editTaskCall: function(index) {      
       this.editTaskModalVisible = false;
-      this.editTask(index);
+      this.editTask(this.$store.state.taskList[index]._id)
       this.editIndex = 0;
     },
-    defineEditTask: function(index){
-      console.log('entrei no edit task')
-      this.$store.commit('newTaskMount',this.$store.state.taskList[index])
-      this.editIndex = index
-      this.editTaskModalVisible = true
+    defineEditTask: function(index){  
+      this.$parent.$options.data.taskTemp = this.$store.state.newTask;
+      console.log(this.$parent.$options.data.taskTemp)
+      this.editIndex = index;      
+      this.editTaskModalVisible = true;      
     },
-    changeeditTaskModalVisible: function () {this.editTaskModalVisible = !this.editTaskModalVisible },         
+    changeEditTaskModalVisible: function () {      
+      this.editTaskModalVisible = false       
+    },         
   }
 };
 

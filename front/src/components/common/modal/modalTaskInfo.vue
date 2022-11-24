@@ -1,7 +1,7 @@
-<template>
+<template >
   <div>
-    <p>{{label}}</p>    
-    <v-row 
+    <p class="text-h5">{{label}}</p>    
+    <v-row       
         align="center">      
         <v-col
           class="d-flex"
@@ -12,7 +12,9 @@
             label="Nome da Tarefa"
             solo
             outlined 
-            v-model ="taskTemp.name"    
+            background-color='blue lighten-5'
+            v-model ="taskTemp.name"  
+            :rules="nameRules"                       
           ></v-text-field>
         </v-col> 
         <v-col
@@ -33,6 +35,7 @@
                 label="Data da tarefa"
                 prepend-icon="mdi-calendar"
                 readonly
+                background-color='blue lighten-5'
                 v-bind="attrs"
                 v-on="on"        
               ></v-text-field>
@@ -51,6 +54,7 @@
             label="Descrição da Tarefa"
             solo
             outlined 
+            background-color='blue lighten-5'            
             v-model ="taskTemp.description"    
           ></v-text-field>
         </v-col>
@@ -59,7 +63,7 @@
         <v-btn 
           class="ma-2 white--text"                
           color="success"                
-          @click="()=>{
+          @click="()=> {
                     this.$store.commit('newTaskMount',taskTemp)
                     $emit('save')}"          
         >
@@ -68,7 +72,9 @@
         <v-btn 
           class="ma-2 white--text"                
           color="error"
-          @click="$emit('changeAddTask')"               
+          @click="() => {
+            this.$store.commit('newTaskMount',this.$store.taskDefault)
+            $emit('modalVisible')}"
         >
           Cancelar
         </v-btn>            
@@ -78,9 +84,15 @@
 
 <script>
 
-
-export default{ 
+export default{
+  mounted(){
+    // console.log('entrei no mounted')
+    // this.taskTemp = this.$store.state.newTask    
+  },
   data: () => ({ 
+    nameRules: [
+        v => !!v || 'Name is required'        
+      ],
     taskTemp: {          
       name: '',
       description: '',

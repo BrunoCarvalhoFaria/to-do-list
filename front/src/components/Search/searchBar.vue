@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-row align="center">      
+    <v-row class="d-flex align-center" >      
       <v-col
         class="d-flex"
         cols="12"
@@ -8,9 +8,10 @@
       >
         <v-select
           :items="items"
-          v-model="selectedFilter"
+          v-model="filter.selectedFilter"
           label="Filtro"          
           outlined
+          background-color='blue lighten-5'
           prepend-inner-icon="mdi-filter-variant"
         ></v-select>
       </v-col>    
@@ -18,61 +19,153 @@
       <v-col
         cols="12"
         sm="6"
-        md="8"
-        v-if = "selectedFilter == 'Nome'"
+        md="6"
+        lg="6"
+        xl="7"
+        v-if = "filter.selectedFilter == 'Nome'"
       >      
-        <NameSearch
-          label="Nome da Tarefa"/>
+        <v-text-field
+            label="Nome da Tarefa:"
+            solo            
+            outlined 
+            v-model = 'filter.filterName'
+            prepend-inner-icon="mdi-magnify"
+            background-color='blue lighten-5'
+          ></v-text-field>
       </v-col>
       <!-- Filtro por data -->
-      <v-row v-if = "selectedFilter == 'Data'">
+      <v-row v-if = "filter.selectedFilter == 'Data'">
         <v-col
           cols="12"
           sm="6"
           md="4"          
         >
-          <DataSearch
-            label="De:"/>
+          <v-menu
+            v-model="menu"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="filter.filterDate.de"
+                label="De:"
+                prepend-icon="mdi-calendar"
+                readonly
+                background-color='blue lighten-5'
+                v-bind="attrs"
+                v-on="on"        
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="filter.filterDate.de"
+              @input="menu = false"      
+            ></v-date-picker>
+          </v-menu>
         </v-col>
         <v-col
           cols="12"
           sm="6"
           md="4"          
         >        
-          <DataSearch
-            label="Até:"/>
+          <v-menu
+            v-model="menu2"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="filter.filterDate.ate"
+                label="Até:"
+                prepend-icon="mdi-calendar"
+                readonly
+                background-color='blue lighten-5'
+                v-bind="attrs"
+                v-on="on"        
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="filter.filterDate.ate"
+              @input="menu2 = false"      
+            ></v-date-picker>
+          </v-menu>
         </v-col>
       </v-row>
       <!-- Filtro por Status -->
       <v-col
         cols="12"
         sm="6"
-        md="8"
-        v-if = "selectedFilter == 'Status'"
+        md="6"
+        v-if = "filter.selectedFilter == 'Status'"
       >      
-        <StatusSearch
-          labe="Status da Tarefa"/>
+        <v-select
+          :items="itemsStatus"
+          v-model="filter.filterStatus"
+          label="Status"          
+          outlined
+          background-color='blue lighten-5'
+        ></v-select>
       </v-col>
+      <v-spacer></v-spacer>
+      
+        <v-btn
+            class="mr-2 mb-5"                
+            color="primary"
+            elevation="10"
+            fab
+            dark    
+            small                   
+            @click="() => {                  
+                      this.$store.commit('filterTaskList',filter)
+                      }"              
+          >
+            <v-icon dark>mdi-magnify</v-icon>
+        </v-btn> 
+        <v-btn
+            class="mr-10 mb-5"                
+            color="error"
+            elevation="10"
+            fab
+            dark    
+            small  
+            @click="() => {                  
+                      this.$store.commit('loadTaskList')
+                      }"              
+          >
+            <v-icon dark>mdi-cancel</v-icon>
+        </v-btn>
+    
     </v-row>
   </v-container>
 </template>
 
 <script>
-  import NameSearch from '../common/Input/NameInput/nameInput.vue';
-  import DataSearch from '../common/Input/DataInput/dataInput.vue';
-  import StatusSearch from '../common/Input/StatusInput/statusInput.vue';
+  
+  
+  
 
     export default {
       name: 'SearchBar',
 
-      components: {
-        NameSearch,
-        DataSearch,
-        StatusSearch 
-      },
       data: () => ({
         items: ['Nome', 'Data', 'Status'],
-        selectedFilter: 'Nome'
+        filter: {  
+          selectedFilter: 'Nome',
+          filterName: '',
+          filterDate: {
+            de:'',
+            ate:''
+            },
+          filterStatus: 'Feito'
+        },
+        itemsStatus: ['Feito', 'Não Feito'],
+        menu2: false,
+        menu: false   
       }),
     };
 </script>
